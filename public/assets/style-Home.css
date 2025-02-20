@@ -1,0 +1,323 @@
+body {
+    background-color: #e4dfd8;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+
+}
+
+.Encabezado {
+    margin: 0;
+    height: 200px;
+    display: grid;
+    background-color: rgb(255, 255, 255);
+    grid-template-columns: 30% 55% 15%;
+    border-bottom: rgb(3, 13, 99) 8px solid;
+
+}
+
+.Logo {
+
+    display: flex;
+    margin-left: 5px;
+    margin-top: 30px;
+    height: 16vh;
+
+
+}
+
+.Logo img {
+   
+    width: 340px;
+    height: 140px;
+    align-items: center;
+
+
+}
+
+.Titulo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 14vh;
+    margin-top: 30px;
+
+
+}
+
+
+.Titulo h1 {
+    color: rgb(7, 7, 90);
+    font-size: 64px;
+    text-align: center;
+    justify-content: center;
+    font-family: "Open Sans";
+
+}
+.Icono {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 14vh;
+    margin-top: 30px;
+}
+
+.Icono-Uno, .Icono-Dos {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+}
+
+.Icono-Uno img {
+    width: 80px;
+    height: 80px;
+}
+
+.Principal {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 16px;
+    width: 100%;
+    min-height: 360px;
+    margin-top: 100px;
+}
+
+.Principal-Uno,
+.Principal-Dos,
+.Principal-Tres {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 40px;
+    width: 440px;
+    height: 300px;
+    padding: 8%;
+    border-radius: 30px;
+    border: 8px solid black;
+
+
+
+}
+
+
+.Principal h2 {
+    font-size: 36px;
+    color: rgb(27, 8, 95);
+
+}
+
+.Principal-Uno {
+
+    display: grid;
+    background-color: rgb(255, 255, 255);
+    grid-template-columns: 2fr;
+
+}
+
+.Principal-Dos {
+
+    display: grid;
+    background-color: rgb(255, 255, 255);
+    grid-template-columns: 2fr;
+}
+
+.Principal-Tres {
+
+    display: grid;
+    background-color: rgb(255, 255, 255);
+    grid-template-columns: 2fr;
+}
+
+.Principal-Uno img {
+    width: 220px;
+    height: 220px;
+    align-items: center;
+}
+
+.Principal-Dos img {
+    width: 300px;
+    height: 220px;
+    align-items: center;
+}
+
+.Principal-Tres img {
+    width: 300px;
+    height: 220px;
+    align-items: center;
+}
+
+.Boton {
+
+    display: flex;
+    margin-top: 4%;
+    margin-left: 25px;
+    background-color:#e4dfd8;
+}
+
+.Boton img {
+    width: 70px;
+    height: 70px;
+    border: none;
+
+}
+
+.Boton :hover {
+    background-color :#e4dfd8;
+    transition: 25px;
+}
+
+button {
+    background-color :#e4dfd8;
+    border: none;
+}
+
+footer {
+    background-color: rgb(255, 255, 255);
+    border-top: rgb(3, 13, 99) 8px solid; ;
+    margin-top: 40px;
+    height: 8vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+/* Celulares */
+@media (max-width: 768px) {
+    .Encabezado {
+        grid-template-columns: 1fr; 
+        height: auto;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .Logo img {
+        width: 200px;
+        height: auto;
+    }
+
+    .Titulo h1 {
+        font-size: 36px;
+    }
+
+    .Principal {
+        grid-template-columns: 1fr; 
+        gap: 12px;
+        margin-top: 50px;
+    }
+
+    .Principal-Uno,
+    .Principal-Dos,
+    .Principal-Tres {
+        width: 70%;
+        height: auto;
+        padding: 5%;
+    }
+
+    footer {
+        height: auto;
+        padding: 10px;
+    }
+}
+
+/* Tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .Encabezado {
+        grid-template-columns: 25% 50% 25%;
+        height: auto;
+        padding: 10px;
+    }
+
+    .Titulo h1 {
+        font-size: 48px;
+    }
+
+    .Principal {
+        grid-template-columns: repeat(2, 2fr); 
+        gap: 16px;
+    }
+    .Principal-Uno,
+    .Principal-Dos,
+    .Principal-Tres {
+        width: 80%;
+        height: auto;
+        padding: 2%;
+    }
+}
+/* pantallas pequeñas */
+@media (min-width: 1025px) and (max-width: 1366px) {
+    .Encabezado {
+        grid-template-columns: 25% 50% 25%;
+        height: 150px;
+        padding: 10px;
+    }
+
+    .Logo img {
+        width: 280px;
+        height: auto;
+    }
+
+    .Titulo h1 {
+        font-size: 48px;
+    }
+
+    .Principal {
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 12px;
+        margin-top: 50px;
+    }
+
+    .Principal-Uno,
+    .Principal-Dos,
+    .Principal-Tres {
+        width: 80%;
+        height: auto;
+        padding: 2%;
+    }
+
+    footer {
+        height: auto;
+        padding: 10px;
+    }
+}
+/* 🖥️ Para PC con pantallas más pequeñas */
+@media (min-width: 1367px) and (max-width: 1700px) {
+    .Encabezado {
+        grid-template-columns: 25% 50% 25%;
+        height: 150px;
+        padding: 10px;
+    }
+
+    .Logo img {
+        width: 280px;
+        height: auto;
+    }
+
+    .Titulo h1 {
+        font-size: 48px;
+    }
+
+    .Principal {
+        grid-template-columns: repeat(2, 2fr); 
+        gap: 12px;
+        margin-top: 50px;
+    }
+
+    .Principal-Uno,
+    .Principal-Dos,
+    .Principal-Tres {
+        width: 80%;
+        height: auto;
+        padding: 2%;
+    }
+
+    footer {
+        height: auto;
+        padding: 10px;
+    }
+}
