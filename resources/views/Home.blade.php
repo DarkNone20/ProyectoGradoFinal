@@ -39,7 +39,7 @@
         <div class="Principal-Uno">
 
 
-            <div class="Imagenes"> <a href="{{ url('/Prestamo') }}"><img src="{{ asset('Imagenes/laptop.png') }}"
+            <div class="Imagenes"> <a href="{{ url('/Prestamo') }}"><img src="{{ asset('Imagenes/Portatil2.png') }}"
                         alt="Logo"></a></div>
             <div>
                 <h2>Prestamo</h2>
@@ -49,8 +49,7 @@
 
         <div class="Principal-Dos">
 
-            <div class="Imagenes"><a href="{{ url('/Devoluciones') }}"><img
-                        src="{{ asset('Imagenes/Devoluciones.png') }}" alt="Logo"></a></div>
+            <div class="Imagenes"><a href="{{ url('/Devoluciones') }}"><img src="{{ asset('Imagenes/Devolucion3.png') }}" alt="Logo"></a></div>
             <div>
                 <h2>Devolucion</h2>
             </div>

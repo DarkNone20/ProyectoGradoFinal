@@ -1,0 +1,159 @@
+body {
+    background-color: #e4dfd8;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+
+}
+
+.Encabezado {
+    margin: 0;
+    height: 200px;
+    display: grid;
+    background-color: rgb(255, 255, 255);
+    grid-template-columns: 30% 55% 15%;
+    border-bottom: rgb(3, 13, 99) 8px solid;
+
+}
+
+.Logo {
+
+    display: flex;
+    margin-left: 5px;
+    margin-top: 30px;
+    height: 16vh;
+
+
+}
+
+.Logo img {
+   
+    width: 340px;
+    height: 140px;
+    align-items: center;
+
+
+}
+
+.Titulo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 14vh;
+    margin-top: 30px;
+
+
+}
+
+
+.Titulo h1 {
+    color: rgb(7, 7, 90);
+    font-size: 64px;
+    text-align: center;
+    justify-content: center;
+    font-family: "Open Sans";
+
+}
+.Icono {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 14vh;
+    margin-top: 30px;
+}
+
+.Icono-Uno, .Icono-Dos {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+}
+
+.Icono-Uno img {
+    width: 80px;
+    height: 80px;
+}
+
+.Principal {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    min-height: 360px;
+    margin-top: 100px;
+}
+
+.Principal-Uno{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 5%;
+    width: 86%;
+    height: 340px;
+    padding: 8%;
+    border-radius: 30px;
+    border: 8px solid black;
+
+
+
+}
+
+
+.Principal h2 {
+    font-size: 36px;
+    color: rgb(27, 8, 95);
+
+}
+
+.Principal-Uno {
+
+    display: grid;
+    background-color: rgb(255, 255, 255);
+    grid-template-columns: 2fr;
+
+}
+
+.Principal-Uno img {
+    width: 220px;
+    height: 220px;
+    align-items: center;
+}
+
+.Boton {
+
+    display: flex;
+    margin-top: 4%;
+    margin-left: 25px;
+    background-color:#e4dfd8;
+}
+
+.Boton img {
+    width: 70px;
+    height: 70px;
+    border: none;
+
+}
+
+.Boton :hover {
+    background-color :#e4dfd8;
+    transition: 25px;
+}
+
+button {
+    background-color :#e4dfd8;
+    border: none;
+}
+
+footer {
+    background-color: rgb(255, 255, 255);
+    border-top: rgb(3, 13, 99) 8px solid; ;
+    margin-top: 40px;
+    height: 8vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

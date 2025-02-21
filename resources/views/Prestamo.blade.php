@@ -38,7 +38,7 @@
         <div class="Principal-Uno">
 
 
-            <div class="Imagenes"> <a href="#"><img src="{{ asset('Imagenes/laptop.png') }}" alt="Logo"></a>
+            <div class="Imagenes"> <a href="Home"><img src="{{ asset('Imagenes/laptop.png') }}" alt="Logo"></a>
             </div>
             <div>
                 <h2>Prestamo</h2>
