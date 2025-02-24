@@ -59,7 +59,7 @@
         <div class="Principal-Tres">
 
 
-            <div class="Imagenes"><a href="{{ url('/renovacion') }}"><img src="{{ asset('Imagenes/Reno.png') }}"
+            <div class="Imagenes"><a href="{{ url('/Renovacion') }}"><img src="{{ asset('Imagenes/Reno.png') }}"
                         alt="Logo"></a> </div>
             <div>
                 <h2>Renovacion</h2>

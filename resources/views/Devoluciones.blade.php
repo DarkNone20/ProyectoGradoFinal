@@ -20,7 +20,7 @@
         </div>
 
         <div class="Titulo">
-            <h1>Sistema de Prestamo de Portatiles</h1>
+            <h1>Sistema de Devoluciones de Portatiles</h1>
         </div>
 
         <div class="Icono">

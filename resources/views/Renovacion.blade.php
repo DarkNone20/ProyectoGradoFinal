@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('assets/style-Renovacion.css') }}">
 
 
-    <title>Prestamo</title>
+    <title>Renovacion</title>
 </head>
 
 <body>
@@ -20,7 +20,7 @@
         </div>
 
         <div class="Titulo">
-            <h1>Sistema de Prestamo de Portatiles</h1>
+            <h1>Sistema de Renovacion de Portatiles</h1>
         </div>
 
         <div class="Icono">
