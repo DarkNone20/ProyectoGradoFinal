@@ -8,7 +8,6 @@
 
     <link rel="stylesheet" href="{{ asset('assets/style-Prestamo.css') }}">
 
-
     <title>Prestamo</title>
 </head>
 
@@ -25,7 +24,7 @@
 
         <div class="Icono">
             <div class="Icono-Uno">
-                <img src="{{ asset('Imagenes/Usuario.png') }}" alt="Logo">
+                <img src="{{ asset('Imagenes/Usuario.png') }}" alt="Usuario">
             </div>
             <div class="Icono-Dos">
                 <p>JJCASTILLO</p>
@@ -34,26 +33,25 @@
     </div>
 
     <div class="Principal">
+       
+            <div class="Principal-Uno">
 
-        <div class="Principal-Uno">
-
-
-            <div class="Imagenes"> <a href="Home"><img src="{{ asset('Imagenes/laptop.png') }}" alt="Logo"></a>
+              
+                <table>
+                    <tr><td><strong>Locker:</strong></td></tr>
+                    <tr><td><strong>Equipo:</strong></td></tr>
+                    <tr><td><strong>Serial:</strong></td></tr>
+                    <tr><td><strong>Modelo:</strong></td></tr>
+                    <tr><td><strong>Duración:</strong></td></tr>
+                    <tr><td><strong>Hora Inicial:</strong></td></tr>
+                    <tr><td><strong>Hora Final:</strong></td></tr>
+                </table>
             </div>
-            <div>
-                <h2>Prestamo</h2>
-            </div>
-
-        </div>
-
-
-
-
+        
     </div>
 
     <div class="Boton">
-        <a href="{{ url('/home') }}"><button type="submit" value="Salir"><img
-                    src="{{ asset('Imagenes/Cambio.png') }}" alt="Logo"></button> </a>
+        <a href="{{ url('/home') }}"><button type="button"><img src="{{ asset('Imagenes/Cambio.png') }}" alt="Salir"></button></a>
     </div>
 
 </body>

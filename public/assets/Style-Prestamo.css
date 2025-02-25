@@ -85,42 +85,43 @@ body {
     margin-top: 100px;
 }
 
-.Principal-Uno{
-    display: grid;
+
+.Principal-Uno {
+    display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     margin: 5%;
     width: 86%;
-    height: 340px;
+    height: auto;
     padding: 8%;
     border-radius: 30px;
     border: 8px solid black;
-
-
-
-}
-
-
-.Principal h2 {
-    font-size: 36px;
-    color: rgb(27, 8, 95);
-
-}
-
-.Principal-Uno {
-
-    display: grid;
     background-color: rgb(255, 255, 255);
-    grid-template-columns: 2fr;
-
 }
 
-.Principal-Uno img {
-    width: 220px;
-    height: 220px;
-    align-items: center;
+.Principal-Uno table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
 }
+
+.Principal-Uno td {
+    padding: 10px;
+    width: 50%; /* Divide en dos columnas */
+    vertical-align: top;
+    /*border: 1px solid #000; Opcional: bordes para mejor visualización */
+}
+
+.Principal-Uno tr {
+    display: flex;
+    justify-content: space-between;
+}
+
+.Principal-Uno td:first-child {
+    font-weight: bold;
+}
+
 
 .Boton {
 

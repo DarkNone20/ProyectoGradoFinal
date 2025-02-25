@@ -9,7 +9,7 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('auth.login'); // Asegúrate de tener esta vista en resources/views/auth/login.blade.php
     }
 
     public function login(Request $request)
@@ -25,13 +25,14 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Las credenciales proporcionadas no son correctas.',
-        ]);
+            'email' => 'Las credenciales no coinciden con nuestros registros.',
+        ])->onlyInput('email');
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
