@@ -27,7 +27,7 @@ class AuthController extends Controller
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
             Auth::login($user);
-            return redirect()->route('dashboard'); // Redirigir al dashboard
+            return redirect()->route('Home'); // Redirigir al dashboard
         }
 
         return back()->withErrors(['loginError' => 'Usuario o contraseña incorrectos']);

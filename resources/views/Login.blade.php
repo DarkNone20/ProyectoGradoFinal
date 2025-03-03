@@ -9,7 +9,6 @@
 <body>
     <div class="Formulario">
         <div class="group">
-    
             @if ($errors->has('loginError'))
                 <p style="color: red;">{{ $errors->first('loginError') }}</p>
             @endif

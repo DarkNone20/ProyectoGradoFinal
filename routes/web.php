@@ -24,21 +24,28 @@ Route::get('/', function () {
 
 */
 
+Route::get('/',[HomeController::class,'index'] );
 
-//Inicio
-Route::get('/home',[HomeController::class,'index'] );
-//Prestamo
 Route::get('/Prestamo',[PrestamoController::class,'index'] );
-//Devoluciones
+
 Route::get('/Devoluciones',[DevolucionesController::class,'index'] );
-//Renovacion
+
 Route::get('/Renovacion',[RenovacionController::class,'index'] );
 
 
+
+
+
+// Ruta para mostrar el formulario de login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+
+// Ruta para manejar el inicio de sesión (POST)
 Route::post('/login', [AuthController::class, 'login']);
+
+// Ruta para manejar el cierre de sesión
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/dashboard', function () {
-    return "Bienvenido al sistema"; // Aquí puedes redirigir al dashboard real
-})->middleware('auth')->name('dashboard');
+// Ruta protegida (ejemplo)
+Route::get('/home', function () {
+    return view('home');
+})->middleware('auth')->name('Home');

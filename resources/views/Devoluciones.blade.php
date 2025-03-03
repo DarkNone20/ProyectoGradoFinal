@@ -52,7 +52,7 @@
     </div>
 
     <div class="Boton">
-        <a href="{{ url('/home') }}"><button type="submit" value="Salir"><img
+        <a href="{{ url('/') }}"><button type="submit" value="Salir"><img
                     src="{{ asset('Imagenes/Cambio.png') }}" alt="Logo"></button> </a>
     </div>
 
