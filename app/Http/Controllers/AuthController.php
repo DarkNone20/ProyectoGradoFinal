@@ -5,37 +5,33 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Usuario;
-use Illuminate\Support\Facades\Hash;
-
-
 
 class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('login');
+        return view('auth.login');
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'DocumentoId' => 'required|string',
-            'password' => 'required|string',
-        ]);
+        $credentials = $request->only('DocumentoId', 'password');
 
-        $user = Usuario::where('DocumentoId', $credentials['DocumentoId'])->first();
+        $usuario = Usuario::where('DocumentoId', $credentials['DocumentoId'])->first();
 
-        if ($user && Hash::check($credentials['password'], $user->password)) {
-            Auth::login($user);
-            return redirect()->route('Home'); // Redirigir al dashboard
+        if ($usuario && password_verify($credentials['password'], $usuario->password)) {
+            // Autenticación exitosa
+            Auth::login($usuario);
+            return redirect()->intended('/home'); // Redirige al dashboard o a la página que desees
         }
 
-        return back()->withErrors(['loginError' => 'Usuario o contraseña incorrectos']);
+        // Autenticación fallida
+        return back()->withErrors(['loginError' => 'Credenciales incorrectas'])->withInput();
     }
 
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('login');
+        return redirect('/');
     }
 }

@@ -8,6 +8,6 @@ class PrestamoController extends Controller
 {
     public function index(){
         
-        return view("Prestamo");
+        return view("prestamo/prestamo");
     }
 }

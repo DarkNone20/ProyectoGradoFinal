@@ -17,35 +17,29 @@ use App\Http\Controllers\RenovacionController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
 /*
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/home',[HomeController::class,'index'] )
+Route::get('/Prestamo',[PrestamoController::class,'index'] );
+Route::get('/Devoluciones',[DevolucionesController::class,'index'] );
+Route::get('/Renovaciones',[RenovacionController::class,'index'] );
 */
 
-Route::get('/',[HomeController::class,'index'] );
-
-Route::get('/Prestamo',[PrestamoController::class,'index'] );
-
-Route::get('/Devoluciones',[DevolucionesController::class,'index'] );
-
-Route::get('/Renovacion',[RenovacionController::class,'index'] );
-
-
-
+//Home
+Route::get('/home', [HomeController::class, 'index'])->middleware('auth');
+//prestamo
+Route::get('/Prestamo', [PrestamoController::class, 'index'])->middleware('auth');
+//Devolucion
+Route::get('/Devoluciones', [DevolucionesController::class, 'index'])->middleware('auth');
+//Renovacion
+Route::get('/Renovaciones', [RenovacionController::class, 'index'])->middleware('auth');
 
 
-// Ruta para mostrar el formulario de login
+//login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-
-// Ruta para manejar el inicio de sesión (POST)
 Route::post('/login', [AuthController::class, 'login']);
-
-// Ruta para manejar el cierre de sesión
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Ruta protegida (ejemplo)
-Route::get('/home', function () {
-    return view('home');
-})->middleware('auth')->name('Home');

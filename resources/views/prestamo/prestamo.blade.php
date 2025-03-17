@@ -51,7 +51,7 @@
     </div>
 
     <div class="Boton">
-        <a href="{{ url('/') }}"><button type="button"><img src="{{ asset('Imagenes/Cambio.png') }}" alt="Salir"></button></a>
+        <a href="{{ url('/home') }}"><button type="button"><img src="{{ asset('Imagenes/Cambio.png') }}" alt="Salir"></button></a>
     </div>
 
 </body>

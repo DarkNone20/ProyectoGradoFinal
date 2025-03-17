@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link rel="stylesheet" href="{{ asset('assets/style-Renovacion.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/style-Home.css') }}">
 
 
-    <title>Renovacion</title>
+    <title>Home</title>
 </head>
 
 <body>
+
 
     <div class="Encabezado">
         <div class="Logo">
@@ -20,7 +21,7 @@
         </div>
 
         <div class="Titulo">
-            <h1>Sistema de Renovacion de Portatiles</h1>
+            <h1>Sistema de Prestamo de Portatiles</h1>
         </div>
 
         <div class="Icono">
@@ -38,21 +39,40 @@
         <div class="Principal-Uno">
 
 
-            <div class="Imagenes"> <a href="#"><img src="{{ asset('Imagenes/Reno.png') }}" alt="Logo"></a>
-            </div>
+            <div class="Imagenes"> <a href="{{ url('Prestamo') }}"><img src="{{ asset('Imagenes/Portatil2.png') }}"
+                        alt="Logo"></a></div>
             <div>
-                <h2>Renovacion</h2>
+                <h2>Prestamo</h2>
             </div>
 
         </div>
 
+        <div class="Principal-Dos">
 
+            <div class="Imagenes"><a href="{{ url('Devoluciones') }}"><img src="{{ asset('Imagenes/Devolucion3.png') }}" alt="Logo"></a></div>
+            <div>
+                <h2>Devolucion</h2>
+            </div>
+
+        </div>
+
+        <div class="Principal-Tres">
+
+
+            <div class="Imagenes"><a href="{{ url('Renovaciones') }}"><img src="{{ asset('Imagenes/Reno.png') }}"
+                        alt="Logo"></a> </div>
+            <div>
+                <h2>Renovacion</h2>
+            </div>
+
+
+        </div>
 
 
     </div>
 
     <div class="Boton">
-        <a href="{{ url('/') }}"><button type="submit" value="Salir"><img
+        <a href="{{ url('/login') }}"><button type="submit" value="Salir"><img
                     src="{{ asset('Imagenes/Cambio.png') }}" alt="Logo"></button> </a>
     </div>
 

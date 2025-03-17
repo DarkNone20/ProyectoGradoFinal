@@ -8,6 +8,6 @@ class RenovacionController extends Controller
 {
     public function index(){
         
-        return view("Renovacion");
+        return view("Renovacion/renovacion");
     }
 }
