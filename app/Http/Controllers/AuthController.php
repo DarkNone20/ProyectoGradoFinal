@@ -29,24 +29,6 @@ class AuthController extends Controller
 
         $usuario = Usuario::where('DocumentoId', $request->DocumentoId)->first();
 
-        // Respuesta para API
-        if ($request->is('api/*')) {
-            if (!$usuario || !Hash::check($request->password, $usuario->password)) {
-                return response()->json([
-                    'message' => 'Credenciales incorrectas'
-                ], 401);
-            }
-
-            // Crear token de acceso
-            $token = $usuario->createToken('auth_token')->plainTextToken;
-            
-            return response()->json([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-            ]);
-        }
-
-        // Respuesta para web tradicional
         if (!$usuario || !Hash::check($request->password, $usuario->password)) {
             return back()->withErrors([
                 'loginError' => 'Credenciales incorrectas'
@@ -61,13 +43,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Para API
-        if ($request->is('api/*')) {
-            $request->user()->currentAccessToken()->delete();
-            return response()->json(['message' => 'Sesión cerrada']);
-        }
-
-        // Para web
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

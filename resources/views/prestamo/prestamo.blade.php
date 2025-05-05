@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
     <link rel="stylesheet" href="{{ asset('assets/style-Prestamo.css') }}">
-
     <title>Prestamo</title>
 </head>
 
@@ -50,13 +48,13 @@
                 <form action="{{ route('prestamo.realizar') }}" method="POST">
                     @csrf
                     <table>
-                        <tr><td><strong>Locker:</strong></td><td>{{ $equipoDisponible->SalaMovil }}</td></tr>
+                        <tr><td><strong>Locker:</strong></td><td>{{ $equipoDisponible->SalaMovil ?? 'No especificado' }}</td></tr>
                         <tr><td><strong>Equipo:</strong></td><td>{{ $equipoDisponible->Marca }}</td></tr>
                         <tr><td><strong>Serial:</strong></td><td>{{ $equipoDisponible->Serial }}</td></tr>
                         <tr><td><strong>Modelo:</strong></td><td>{{ $equipoDisponible->Modelo }}</td></tr>
-                        <tr><td><strong>Duración:</strong></td><td>{{ $grupoUsuario->Duracion ?? 1 }} horas</td></tr>
-                        <tr><td><strong>Hora Inicial:</strong></td><td>{{ $grupoUsuario->HoraInicial }}</td></tr>
-                        <tr><td><strong>Hora Final:</strong></td><td>{{ $grupoUsuario->HoraFinal }}</td></tr>
+                        <tr><td><strong>Duración:</strong></td><td>{{ $grupoValido->Duracion ?? 1 }} horas</td></tr>
+                        <tr><td><strong>Hora Inicial:</strong></td><td>{{ $grupoValido->HoraInicial }}</td></tr>
+                        <tr><td><strong>Hora Final:</strong></td><td>{{ $grupoValido->HoraFinal }}</td></tr>
                     </table>
                     <input type="hidden" name="serial" value="{{ $equipoDisponible->Serial }}">
                     <input type="hidden" name="activo_fijo" value="{{ $equipoDisponible->ActivoFijo }}">
@@ -67,12 +65,33 @@
             <div class="alert alert-info">
                 <h3>No puedes realizar préstamos en este momento</h3>
                 <p>{{ $mensajeError }}</p>
+                
+                @if(isset($grupoValido))
+                    <div style="margin-top: 15px; padding: 10px; background: #f8f9fa;">
+                        <h4>Información del Grupo:</h4>
+                        <p><strong>Curso:</strong> {{ $grupoValido->NombreCurso ?? 'No especificado' }}</p>
+                        <p><strong>Profesor:</strong> {{ $grupoValido->NombreProfesor ?? 'No especificado' }}</p>
+                        <p><strong>Horario:</strong> {{ $grupoValido->HoraInicial }} - {{ $grupoValido->HoraFinal }}</p>
+                        <p><strong>Duración:</strong> {{ $grupoValido->Duracion ?? 1 }} horas</p>
+                    </div>
+                @endif
+                
+                <div style="margin-top: 15px; padding: 10px; background: #f8f9fa;">
+                    <h4>Información del Sistema:</h4>
+                    <p><strong>Hora actual:</strong> {{ now()->format('Y-m-d H:i:s') }}</p>
+                    <p><strong>Equipos disponibles:</strong> {{ DB::table('Equipos')->where('Estado', 'Disponible')->count() }}</p>
+                </div>
             </div>
         @endif
     </div>
 
     <div class="Boton">
-        <a href="{{ url('/home') }}"><button type="button"><img src="{{ asset('Imagenes/Cambio.png') }}" alt="Salir"></button></a>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit">
+                <img src="{{ asset('Imagenes/Cambio.png') }}" alt="Salir">
+            </button>
+        </form>
     </div>
 
 </body>

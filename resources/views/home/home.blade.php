@@ -75,9 +75,13 @@
     </div>
 
     <div class="Boton">
-        <a href="{{ url('/login') }}"><button type="submit" value="Salir"><img
-                    src="{{ asset('Imagenes/Cambio.png') }}" alt="Logo"></button> </a>
-    </div>
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" value="Salir">
+            <img src="{{ asset('Imagenes/Cambio.png') }}" alt="Cerrar sesión">
+        </button>
+    </form>
+</div>
 
 </body>
 <footer>

@@ -18,13 +18,14 @@ class PrestamoController extends Controller
         $equipoDisponible = null;
         $grupoValido = null;
         $mensajeError = null;
-
+        $usuarioAutenticado = auth()->user();
+    
         // 1. Verificar si el usuario está en algún grupo
         $gruposUsuario = DB::table('Usuario_Grupo')
             ->join('Grupos', 'Usuario_Grupo.IdGrupo', '=', 'Grupos.IdGrupo')
             ->where('Usuario_Grupo.DocumentoId', $usuario->DocumentoId)
             ->get();
-
+    
         if ($gruposUsuario->isEmpty()) {
             $mensajeError = 'No puedes realizar préstamos porque no estás en clase.';
         } else {
@@ -36,31 +37,41 @@ class PrestamoController extends Controller
                     break;
                 }
             }
-
+    
             // 3. Si puede prestar, verificar equipos disponibles
             if ($puedePrestar) {
                 $equipoDisponible = DB::table('Equipos')
                     ->where('Estado', 'Disponible')
+                    ->where('SalaMovil', $grupoValido->SalaMovil ?? null) // Filtra por sala específica
                     ->first();
-
+    
                 if (!$equipoDisponible) {
-                    $mensajeError = 'No hay equipos disponibles.';
+                    $mensajeError = 'No hay equipos disponibles en '.($grupoValido->SalaMovil ?? 'la sala asignada');
+                    // Registro para depuración
+                    \Log::info('No hay equipos disponibles', [
+                        'sala_movil' => $grupoValido->SalaMovil ?? null,
+                        'total_disponibles' => DB::table('Equipos')->where('Estado', 'Disponible')->count()
+                    ]);
                     $puedePrestar = false;
                 }
             } else {
-                $mensajeError = 'No estás en horario de clase.';
+                $mensajeError = 'No estás en horario de clase. Horario válido: ';
+                foreach ($gruposUsuario as $grupo) {
+                    $mensajeError .= $grupo->DiaSemana.' '.$grupo->HoraInicial.'-'.$grupo->HoraFinal.', ';
+                }
+                $mensajeError = rtrim($mensajeError, ', ');
             }
         }
-
+    
         return view('prestamo/prestamo', compact(
             'usuario',
             'puedePrestar',
             'equipoDisponible',
             'grupoValido',
-            'mensajeError'
+            'mensajeError',
+            'usuarioAutenticado'
         ));
     }
-
     /**
      * Procesa la solicitud de préstamo
      */
@@ -131,21 +142,70 @@ class PrestamoController extends Controller
      */
     private function validarHorarioGrupo($grupo)
     {
-        $now = Carbon::now();
+        $now = Carbon::now('America/Bogota');
         
-        // 1. Verificar día de la semana (0=domingo, 6=sábado)
-        $diaClase = Carbon::parse($grupo->FechaInicial)->dayOfWeek;
-        if ($now->dayOfWeek != $diaClase) {
+        // 1. Verificar rango de fechas (formato Y-m-d)
+        $fechaInicial = Carbon::parse($grupo->FechaInicial, 'America/Bogota')->startOfDay();
+        $fechaFinal = Carbon::parse($grupo->FechaFinal, 'America/Bogota')->endOfDay();
+        
+        if (!$now->betweenIncluded($fechaInicial, $fechaFinal)) {
+            \Log::debug('Fecha fuera de rango', [
+                'now' => $now,
+                'fecha_inicial' => $fechaInicial,
+                'fecha_final' => $fechaFinal
+            ]);
             return false;
         }
         
-        // 2. Verificar rango de fechas (incluyendo los días límite)
-        if (!$now->betweenIncluded(Carbon::parse($grupo->FechaInicial), Carbon::parse($grupo->FechaFinal))) {
-            return false;
+        // 2. Verificar día de la semana (asumiendo campo DiaSemana en Grupos)
+        if (isset($grupo->DiaSemana)) {
+            $diasMap = [
+                'Lunes' => 1, 'Martes' => 2, 'Miercoles' => 3, 'Miércoles' => 3,
+                'Jueves' => 4, 'Viernes' => 5, 'Sabado' => 6, 'Sábado' => 6,
+                'Domingo' => 0
+            ];
+            
+            $diaActual = $now->dayOfWeekIso; // 1-7 (Lunes-Domingo)
+            $diaGrupo = $diasMap[$grupo->DiaSemana] ?? null;
+            
+            if ($diaGrupo === null || $diaActual != $diaGrupo) {
+                \Log::debug('Día no coincide', [
+                    'dia_actual' => $diaActual,
+                    'dia_grupo' => $grupo->DiaSemana,
+                    'mapeo' => $diaGrupo
+                ]);
+                return false;
+            }
         }
         
-        // 3. Verificar rango de horas (comparación directa de strings)
-        $horaActual = $now->format('H:i:s');
-        return $horaActual >= $grupo->HoraInicial && $horaActual <= $grupo->HoraFinal;
+        // 3. Verificar rango de horas
+        try {
+            $horaInicio = Carbon::parse($grupo->HoraInicial, 'America/Bogota');
+            $horaFin = Carbon::parse($grupo->HoraFinal, 'America/Bogota');
+            
+            $horaActual = $now->copy()->setDate(2000, 1, 1); // Fecha arbitraria para comparar solo hora
+            
+            $valido = $horaActual->betweenIncluded(
+                $horaInicio->setDate(2000, 1, 1),
+                $horaFin->setDate(2000, 1, 1)
+            );
+            
+            if (!$valido) {
+                \Log::debug('Horario no válido', [
+                    'hora_actual' => $horaActual->format('H:i:s'),
+                    'hora_inicio' => $horaInicio->format('H:i:s'),
+                    'hora_fin' => $horaFin->format('H:i:s')
+                ]);
+            }
+            
+            return $valido;
+        } catch (\Exception $e) {
+            \Log::error('Error al parsear horarios', [
+                'error' => $e->getMessage(),
+                'hora_inicial' => $grupo->HoraInicial,
+                'hora_final' => $grupo->HoraFinal
+            ]);
+            return false;
+        }
     }
 }

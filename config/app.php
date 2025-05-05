@@ -69,7 +69,9 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+      'timezone' => env('APP_TIMEZONE', 'America/Bogota'),
+      'locale' => 'es',
+      'faker_locale' => 'es_CO',
 
     /*
     |--------------------------------------------------------------------------
