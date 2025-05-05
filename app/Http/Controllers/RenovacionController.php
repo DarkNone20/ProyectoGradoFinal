@@ -8,6 +8,9 @@ class RenovacionController extends Controller
 {
     public function index(){
         
-        return view("Renovacion/renovacion");
+        // Obtener el usuario autenticado
+        $usuarioAutenticado = auth()->user();
+        
+        return view("Renovacion/renovacion",compact('usuarioAutenticado'));
     }
 }

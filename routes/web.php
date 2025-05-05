@@ -29,17 +29,24 @@ Route::get('/Devoluciones',[DevolucionesController::class,'index'] );
 Route::get('/Renovaciones',[RenovacionController::class,'index'] );
 */
 
-//Home
-Route::get('/home', [HomeController::class, 'index'])->middleware('auth');
-//prestamo
-Route::get('/Prestamo', [PrestamoController::class, 'index'])->middleware('auth');
-//Devolucion
-Route::get('/Devoluciones', [DevolucionesController::class, 'index'])->middleware('auth');
-//Renovacion
-Route::get('/Renovaciones', [RenovacionController::class, 'index'])->middleware('auth');
+Route::middleware('auth')->group(function () {
+    // Home
+    Route::get('/home', [HomeController::class, 'index'])->middleware('auth');
+    
+    // préstamo
+    Route::get('/Prestamo', [PrestamoController::class, 'index'])->middleware('auth');
+    Route::post('/Prestamo/realizar', [PrestamoController::class, 'realizarPrestamo'])->name('prestamo.realizar');
+    
+    // Devolucion
+    Route::get('/Devoluciones', [DevolucionesController::class, 'index'])->middleware('auth');
+    
+    // Renovacion
+    Route::get('/Renovaciones', [RenovacionController::class, 'index'])->middleware('auth');
 
+});
 
-//login
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    // login
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+

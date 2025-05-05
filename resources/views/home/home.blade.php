@@ -29,7 +29,10 @@
                 <img src="{{ asset('Imagenes/Usuario.png') }}" alt="Logo">
             </div>
             <div class="Icono-Dos">
-                <p>JJCASTILLO</p>
+               
+                    <p>{{ $usuarioAutenticado->Nombre ?? 'Invitado' }}</p>
+               
+                </div>
             </div>
         </div>
     </div>
