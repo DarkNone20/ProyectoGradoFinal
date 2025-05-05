@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-
-        // Obtener el usuario autenticado
-        $usuarioAutenticado = auth()->user();
-
-        return view("home/home",compact('usuarioAutenticado'));
+        return view("home/home", [
+            'usuarioAutenticado' => auth()->user()
+        ]);
     }
 }
