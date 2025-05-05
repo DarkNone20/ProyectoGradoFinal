@@ -7,6 +7,7 @@ use App\Http\Controllers\PrestamoController;
 use App\Http\Controllers\DevolucionesController;
 use App\Http\Controllers\RenovacionController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,4 +50,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
