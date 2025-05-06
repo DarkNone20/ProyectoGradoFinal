@@ -114,15 +114,14 @@ body {
 }
 .alert {
     padding: 15px;
-    margin-bottom: 15px;
     border: 1px solid transparent;
     border-radius: 4px;
     position: fixed;
-    top: 50%;
+    top: 58%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    font-size: 17px;
+    font-size: 20px;
 }
 .alert-success {
     color: #3c763d;
