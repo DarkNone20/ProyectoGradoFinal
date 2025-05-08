@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset('assets/style-Prestamo.css') }}">
-    <title>Prestamo</title>
+    <title>Préstamo de Equipos</title>
+   
 </head>
 
 <body>
@@ -17,7 +18,7 @@
         </div>
 
         <div class="Titulo">
-            <h1>Sistema de Prestamo de Portatiles</h1>
+            <h1>Sistema de Préstamo de Portátiles</h1>
         </div>
 
         <div class="Icono">
@@ -73,13 +74,46 @@
                         <p><strong>Profesor:</strong> {{ $grupoValido->NombreProfesor ?? 'No especificado' }}</p>
                         <p><strong>Horario:</strong> {{ $grupoValido->HoraInicial }} - {{ $grupoValido->HoraFinal }}</p>
                         <p><strong>Duración:</strong> {{ $grupoValido->Duracion ?? 1 }} horas</p>
+                        <p><strong>Sala:</strong> {{ $grupoValido->SalaMovil ?? 'No especificada' }}</p>
                     </div>
                 @endif
                 
-                <div style="margin-top: 15px; padding: 10px; background: #f8f9fa;">
-                    <h4>Información del Sistema:</h4>
-                    <p><strong>Hora actual:</strong> {{ now()->format('Y-m-d H:i:s') }}</p>
-                    <p><strong>Equipos disponibles:</strong> {{ DB::table('Equipos')->where('Estado', 'Disponible')->count() }}</p>
+                <div class="debug-info">
+                    <h4>Información Detallada del Sistema:</h4>
+                    <p><strong>Hora actual:</strong> {{ now('America/Bogota')->format('Y-m-d H:i:s') }}</p>
+                    <p><strong>Equipos disponibles en total:</strong> {{ DB::table('Equipos')->where('Estado', 'Disponible')->count() }}</p>
+                    
+                    @if(isset($grupoValido))
+                        <p><strong>Equipos disponibles en tu sala ({{ $grupoValido->SalaMovil ?? 'No especificada' }}):</strong> 
+                           {{ DB::table('Equipos')->where('Estado', 'Disponible')->where('SalaMovil', $grupoValido->SalaMovil ?? '')->count() }}
+                        </p>
+                    @endif
+                    
+                    <h4>Tus Grupos:</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Curso</th>
+                                <th>Día</th>
+                                <th>Horario</th>
+                                <th>Sala</th>
+                                <th>Fecha Inicial</th>
+                                <th>Fecha Final</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($gruposUsuario as $grupo)
+                                <tr>
+                                    <td>{{ $grupo->NombreCurso ?? 'N/A' }}</td>
+                                    <td>{{ $grupo->DiaSemana }}</td>
+                                    <td>{{ $grupo->HoraInicial }} - {{ $grupo->HoraFinal }}</td>
+                                    <td>{{ $grupo->SalaMovil ?? 'N/A' }}</td>
+                                    <td>{{ $grupo->FechaInicial }}</td>
+                                    <td>{{ $grupo->FechaFinal }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         @endif
