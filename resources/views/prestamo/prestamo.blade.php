@@ -120,12 +120,8 @@
     </div>
 
     <div class="Boton">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit">
-                <img src="{{ asset('Imagenes/Cambio.png') }}" alt="Salir">
-            </button>
-        </form>
+        <a href="{{ url('/home') }}"><button type="submit" value="Salir"><img
+                    src="{{ asset('Imagenes/Cambio.png') }}" alt="Logo"></button> </a>
     </div>
 
 </body>
