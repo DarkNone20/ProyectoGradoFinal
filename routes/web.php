@@ -11,7 +11,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/Prestamo', [PrestamoController::class, 'index']);
     Route::post('/Prestamo/realizar', [PrestamoController::class, 'realizarPrestamo'])->name('prestamo.realizar');
-    Route::get('/Devoluciones', [DevolucionesController::class, 'index']);
+    Route::middleware('auth')->group(function () {
+        // ... otras rutas ...
+        Route::get('/Devoluciones', [DevolucionesController::class, 'index']);
+        Route::post('/Devoluciones/procesar', [DevolucionesController::class, 'procesarDevolucion'])->name('devolucion.procesar');
+    });
     Route::get('/Renovaciones', [RenovacionController::class, 'index']);
 });
 

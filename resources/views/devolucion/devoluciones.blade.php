@@ -5,11 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <link rel="stylesheet" href="{{ asset('assets/style-devoluciones.css') }}">
-
-
-    <title>Devoluciones</title>
+    <link rel="stylesheet" href="{{ asset('assets/style-Prestamo.css') }}">
+    <title>Devolución de Equipos</title>
 </head>
 
 <body>
@@ -20,35 +17,61 @@
         </div>
 
         <div class="Titulo">
-            <h1>Sistema de Devoluciones de Portatiles</h1>
+            <h1>Sistema de Devolución de Portátiles</h1>
         </div>
 
         <div class="Icono">
             <div class="Icono-Uno">
-                <img src="{{ asset('Imagenes/Usuario.png') }}" alt="Logo">
+                <img src="{{ asset('Imagenes/Usuario.png') }}" alt="Usuario">
             </div>
             <div class="Icono-Dos">
-                 <p>{{ $usuarioAutenticado->Nombre ?? 'Invitado' }}</p>
+                <p>{{ $usuarioAutenticado->Nombre ?? 'Invitado' }}</p>
             </div>
         </div>
     </div>
 
     <div class="Principal">
-
-        <div class="Principal-Uno">
-
-
-            <div class="Imagenes"> <a href="Home"><img src="{{ asset('Imagenes/Devoluciones.png') }}"
-                        alt="Logo"></a></div>
-            <div>
-                <h2>Devoluciones</h2>
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
             </div>
-
-        </div>
-
-
-
-
+        @endif
+        
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+        
+        @if($prestamosActivos->isNotEmpty())
+            @foreach($prestamosActivos as $prestamo)
+                <div class="Principal-Uno">
+                    <form action="{{ route('devolucion.procesar') }}" method="POST">
+                        @csrf
+                        <table>
+                            <tr><td><strong>Equipo:</strong></td><td>{{ $prestamo->Marca }}</td></tr>
+                            <tr><td><strong>Serial:</strong></td><td>{{ $prestamo->Serial }}</td></tr>
+                            <tr><td><strong>Modelo:</strong></td><td>{{ $prestamo->Modelo }}</td></tr>
+                            <tr><td><strong>Fecha Préstamo:</strong></td><td>{{ $prestamo->FechaI }}</td></tr>
+                            <tr><td><strong>Hora Préstamo:</strong></td><td>{{ $prestamo->HoraI }}</td></tr>
+                            <tr><td><strong>Fecha Vencimiento:</strong></td><td>{{ $prestamo->FechaF }}</td></tr>
+                            <tr><td><strong>Hora Vencimiento:</strong></td><td>{{ $prestamo->HoraF }}</td></tr>
+                            <tr>
+                                <td><strong>Observaciones:</strong></td>
+                                <td><textarea name="observaciones" rows="2" style="width: 100%"></textarea></td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="id_prestamo" value="{{ $prestamo->IdPrestamo }}">
+                        <button type="submit" class="btn-prestamo">Realizar Devolución</button>
+                    </form>
+                </div>
+            @endforeach
+        @else
+            <div class="alert alert-info">
+                <h3>No tienes equipos pendientes por devolver</h3>
+                <p>Actualmente no tienes ningún préstamo activo en el sistema.</p>
+            </div>
+        @endif
     </div>
 
     <div class="Boton">
