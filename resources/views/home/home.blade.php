@@ -45,7 +45,7 @@
             <div class="Imagenes"> <a href="{{ url('Prestamo') }}"><img src="{{ asset('Imagenes/Portatil2.png') }}"
                         alt="Logo"></a></div>
             <div>
-                <h2>Prestamo</h2>
+                <h2>Prestamos</h2>
             </div>
 
         </div>
@@ -54,20 +54,8 @@
 
             <div class="Imagenes"><a href="{{ url('Devoluciones') }}"><img src="{{ asset('Imagenes/Devolucion3.png') }}" alt="Logo"></a></div>
             <div>
-                <h2>Devolucion</h2>
+                <h2>Devoluciones</h2>
             </div>
-
-        </div>
-
-        <div class="Principal-Tres">
-
-
-            <div class="Imagenes"><a href="{{ url('Renovaciones') }}"><img src="{{ asset('Imagenes/Reno.png') }}"
-                        alt="Logo"></a> </div>
-            <div>
-                <h2>Renovacion</h2>
-            </div>
-
 
         </div>
 

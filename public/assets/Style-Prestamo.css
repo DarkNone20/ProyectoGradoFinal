@@ -1,38 +1,38 @@
-/* Estilos generales */
+/* ===== ESTILOS GENERALES ===== */
 body {
     background-color: #e4dfd8;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    font-family: 'Open Sans', sans-serif;
     color: #333;
+    font-family: 'Open Sans', sans-serif;
+    height: 100%;
     line-height: 1.6;
+    margin: 0;
+    width: 100%;
 }
 
-/* Encabezado */
+/* ===== ENCABEZADO ===== */
 .Encabezado {
-    margin: 0;
-    height: 200px;
-    display: grid;
     background-color: rgb(255, 255, 255);
-    grid-template-columns: 30% 55% 15%;
     border-bottom: rgb(3, 13, 99) 8px solid;
+    display: grid;
+    grid-template-columns: 30% 55% 15%;
+    height: 200px;
+    margin: 0;
     position: relative;
     z-index: 10;
 }
 
 .Logo {
     display: flex;
+    height: 16vh;
     margin-left: 5px;
     margin-top: 30px;
-    height: 16vh;
 }
 
 .Logo img {
-    width: 340px;
     height: 140px;
     object-fit: contain;
     transition: transform 0.3s ease;
+    width: 340px;
 }
 
 .Logo img:hover {
@@ -40,111 +40,108 @@ body {
 }
 
 .Titulo {
-    display: flex;
-    justify-content: center;
     align-items: center;
-    text-align: center;
+    display: flex;
     height: 14vh;
+    justify-content: center;
     margin-top: 30px;
+    text-align: center;
 }
 
 .Titulo h1 {
     color: rgb(7, 7, 90);
-    font-size: 2.5rem;
-    text-align: center;
     font-family: "Open Sans";
+    font-size: 2.5rem;
     font-weight: 700;
+    text-align: center;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Icono de usuario */
+/* ===== ICONO DE USUARIO ===== */
 .Icono {
-    display: flex;
-    flex-direction: column; 
-    justify-content: center;
     align-items: center;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
     height: 14vh;
+    justify-content: center;
     margin-top: 30px;
     padding-right: 20px;
+    text-align: center;
 }
 
-.Icono-Uno, .Icono-Dos {
-    display: flex;
-    flex-direction: column; 
-    justify-content: center;
+.Icono-Uno,
+.Icono-Dos {
     align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .Icono-Uno img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
     border: 2px solid #07075a;
+    border-radius: 50%;
+    height: 80px;
     transition: all 0.3s ease;
+    width: 80px;
 }
 
 .Icono-Uno img:hover {
-    transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: scale(1.05);
 }
 
 .Icono-Dos p {
-    margin-top: 5px;
-    font-weight: 600;
     color: #07075a;
+    font-weight: 600;
+    margin-top: 5px;
 }
 
-/* Contenido principal */
+/* ===== CONTENIDO PRINCIPAL ===== */
 .Principal {
+    align-items: center;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 100%;
-    min-height: calc(100vh - 300px);
     margin-top: 40px;
+    min-height: calc(100vh - 300px);
     padding: 0 20px;
-    box-sizing: border-box;
+    width: 100%;
 }
 
 .Principal-Uno {
-    display: flex;
-    justify-content: center;
     align-items: center;
-    text-align: center;
-    margin: 20px 0;
-    width: 90%;
-    max-width: 1000px;
-    height: auto;
-    padding: 40px;
-    border-radius: 30px;
-    border: 8px solid #07075a;
     background-color: rgb(255, 255, 255);
+    border: 8px solid #07075a;
+    border-radius: 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    display: flex;
+    height: auto;
+    justify-content: center;
+    margin: 20px 0;
+    max-width: 1000px;
+    padding: 40px;
+    text-align: center;
     transition: all 0.3s ease;
+    width: 90%;
 }
 
 .Principal-Uno:hover {
-    transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
 }
 
 .Principal-Uno table {
-    width: 100%;
-    text-align: left;
     border-collapse: collapse;
     margin-bottom: 20px;
+    text-align: left;
+    width: 100%;
 }
 
 .Principal-Uno td {
-    padding: 15px;
-    width: 50%; 
-    vertical-align: middle;
     border-bottom: 1px solid #eee;
-}
-
-.Principal-Uno tr:last-child td {
-    border-bottom: none;
+    padding: 15px;
+    vertical-align: middle;
+    width: 50%;
 }
 
 .Principal-Uno tr {
@@ -152,93 +149,98 @@ body {
     justify-content: space-between;
 }
 
+.Principal-Uno tr:last-child td {
+    border-bottom: none;
+}
+
 .Principal-Uno td:first-child {
-    font-weight: bold;
     color: #07075a;
+    font-weight: bold;
 }
 
-/* Alertas y mensajes */
-.alert-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin: 20px 0;
-}
-
+/* ===== ALERTAS Y MENSAJES ===== */
 .alert {
-    padding: 25px;
-    margin: 0 auto;
     border: 1px solid transparent;
     border-radius: 12px;
-    width: 90%;
-    max-width: 900px;
-    text-align: center;
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 25px;
+    text-align: center;
     transition: all 0.3s ease;
+    width: 90%;
 }
 
-.alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
+.alert-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    width: 100%;
 }
 
 .alert-danger {
-    color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
+    color: #721c24;
 }
 
 .alert-info {
-    color: #0c5460;
     background-color: #d1ecf1;
     border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
 }
 
 .alert h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
     font-size: 1.5rem;
     font-weight: 700;
+    margin-bottom: 15px;
+    margin-top: 0;
 }
 
 .alert p {
-    margin-bottom: 0;
     font-size: 1.1rem;
     line-height: 1.6;
+    margin-bottom: 0;
 }
 
 .debug-info {
-    margin: 25px auto;
-    padding: 25px;
     background: #f8f9fa;
     border: 1px solid #ddd;
     border-radius: 12px;
-    width: 90%;
-    max-width: 900px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    margin: 25px auto;
+    max-width: 900px;
+    padding: 25px;
+    width: 90%;
 }
 
-/* Tablas */
+/* ===== TABLAS ===== */
 table {
-    width: 100%;
     border-collapse: collapse;
-    margin: 25px 0;
-    font-size: 0.9em;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    font-size: 0.9em;
+    margin: 25px 0;
+    width: 100%;
+}
+
+table th,
+table td {
+    padding: 12px 15px;
 }
 
 table thead tr {
     background-color: #07075a;
     color: #ffffff;
     text-align: left;
-}
-
-table th, table td {
-    padding: 12px 15px;
 }
 
 table tbody tr {
@@ -257,49 +259,38 @@ table tbody tr:hover {
     background-color: #f1f1f1;
 }
 
-/* Botones */
+/* ===== BOTONES ===== */
 .btn-prestamo {
     background-color: #07075a;
-    color: white;
-    padding: 12px 30px;
     border: none;
     border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    color: white;
     cursor: pointer;
     font-size: 1.1rem;
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 1px;
-    transition: all 0.3s ease;
     margin-top: 20px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 12px 30px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
 }
 
 .btn-prestamo:hover {
     background-color: #0d0d8a;
-    transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
 }
 
-/* Botón de salida */
+/* ===== BOTÓN DE SALIDA ===== */
 .Boton {
-    display: flex;
-    margin-top: 40px;
-    margin-left: 25px;
     background-color: transparent;
-    position: absolute;
     bottom: 20px;
+    display: flex;
     left: 20px;
-}
-
-.Boton img {
-    width: 70px;
-    height: 70px;
-    border: none;
-    transition: all 0.3s ease;
-}
-
-.Boton img:hover {
-    transform: scale(1.1);
+    margin-left: 25px;
+    margin-top: 40px;
+    position: absolute;
 }
 
 .Boton button {
@@ -308,22 +299,33 @@ table tbody tr:hover {
     cursor: pointer;
 }
 
-/* Footer */
-footer {
-    background-color: rgb(255, 255, 255);
-    border-top: rgb(3, 13, 99) 8px solid;
-    margin-top: 60px;
-    height: 80px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: #07075a;
-    font-weight: 600;
+.Boton img {
+    border: none;
+    height: 70px;
+    transition: all 0.3s ease;
+    width: 70px;
 }
 
-/* Responsividad */
+.Boton img:hover {
+    transform: scale(1.1);
+}
+
+/* ===== FOOTER ===== */
+footer {
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    border-top: rgb(3, 13, 99) 8px solid;
+    color: #07075a;
+    display: flex;
+    font-weight: 600;
+    height: 80px;
+    justify-content: center;
+    margin-top: 60px;
+    text-align: center;
+    width: 100%;
+}
+
+/* ===== MEDIA QUERIES ===== */
 @media (max-width: 1024px) {
     .Titulo h1 {
         font-size: 2rem;
@@ -337,41 +339,65 @@ footer {
 
 @media (max-width: 768px) {
     .Encabezado {
+        display: flex;
+        flex-direction: column;
         grid-template-columns: 1fr;
         height: auto;
         padding: 20px 0;
     }
     
-    .Logo, .Titulo, .Icono {
-        margin: 10px 0;
+    .Logo,
+    .Titulo,
+    .Icono {
         height: auto;
         justify-content: center;
+        margin: 10px 0;
+        width: 100%;
+    }
+    
+    .Logo {
+        justify-content: center;
+        margin-left: 0;
     }
     
     .Logo img {
-        width: 280px;
         height: auto;
+        width: 280px;
     }
     
     .Titulo h1 {
         font-size: 1.8rem;
+        padding: 0 15px;
+    }
+    
+    .Icono {
+        padding-right: 0;
     }
     
     .Principal-Uno {
-        padding: 20px;
         border-radius: 20px;
+        padding: 20px;
     }
     
-    .alert, .debug-info {
+    .alert,
+    .debug-info {
         padding: 20px;
         width: 95%;
+    }
+    
+    .Boton {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        justify-content: center;
+        margin: 20px auto;
     }
 }
 
 @media (max-width: 480px) {
     .Principal-Uno {
-        padding: 15px;
         border-width: 5px;
+        padding: 15px;
     }
     
     .Principal-Uno table {
@@ -383,12 +409,18 @@ footer {
     }
     
     .btn-prestamo {
-        padding: 10px 20px;
         font-size: 1rem;
+        padding: 10px 20px;
     }
     
     .Boton img {
-        width: 60px;
         height: 60px;
+        width: 60px;
+    }
+    
+    footer {
+        font-size: 0.9rem;
+        height: auto;
+        padding: 15px;
     }
 }

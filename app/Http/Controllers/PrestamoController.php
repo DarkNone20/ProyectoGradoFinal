@@ -12,7 +12,7 @@ class PrestamoController extends Controller
     /**
      * Muestra la vista de préstamo con validación mejorada
      */
-    public function index()
+      public function index()
     {
         $usuario = auth()->user();
         $puedePrestar = false;
@@ -21,7 +21,39 @@ class PrestamoController extends Controller
         $mensajeError = null;
         $usuarioAutenticado = auth()->user();
     
-        // 1. Verificar si el usuario está en algún grupo
+        // 1. Verificar si el usuario tiene préstamos activos (mejorado)
+        $prestamoActivo = DB::table('Prestamos')
+            ->where('DocumentoId', $usuario->DocumentoId)
+            ->where(function($query) {
+                $query->whereNull('FechaDevolucion')
+                      ->orWhereNull('HoraDevolucion');
+            })
+            ->where('FechaI', '<=', Carbon::today())
+            ->where('FechaF', '>=', Carbon::today())
+            ->first();
+            
+        if ($prestamoActivo) {
+            $mensajeError = 'Ya tienes un préstamo activo (Serial: '.$prestamoActivo->Serial.'). Debes devolver este equipo antes de solicitar otro.';
+            Log::info('Usuario con préstamo activo', [
+                'usuario' => $usuario->DocumentoId,
+                'prestamo_id' => $prestamoActivo->IdPrestamo,
+                'serial' => $prestamoActivo->Serial,
+                'fecha_inicio' => $prestamoActivo->FechaI,
+                'fecha_fin' => $prestamoActivo->FechaF
+            ]);
+            
+            return view('prestamo/prestamo', [
+                'usuario' => $usuario,
+                'puedePrestar' => false,
+                'equipoDisponible' => null,
+                'grupoValido' => null,
+                'mensajeError' => $mensajeError,
+                'usuarioAutenticado' => $usuarioAutenticado,
+                'gruposUsuario' => collect() // Enviamos colección vacía para evitar errores en la vista
+            ]);
+        }
+    
+        // Resto del código permanece igual...
         $gruposUsuario = DB::table('Usuario_Grupo')
             ->join('Grupos', 'Usuario_Grupo.IdGrupo', '=', 'Grupos.IdGrupo')
             ->where('Usuario_Grupo.DocumentoId', $usuario->DocumentoId)
@@ -29,45 +61,20 @@ class PrestamoController extends Controller
     
         if ($gruposUsuario->isEmpty()) {
             $mensajeError = 'No puedes realizar préstamos porque no estás en clase.';
-            Log::info('Usuario sin grupos asignados', ['usuario' => $usuario->DocumentoId]);
         } else {
-            // 2. Buscar un grupo que coincida con el horario actual
             foreach ($gruposUsuario as $grupo) {
                 if ($this->validarHorarioGrupo($grupo)) {
                     $puedePrestar = true;
                     $grupoValido = $grupo;
-                    Log::info('Grupo válido encontrado', [
-                        'grupo_id' => $grupo->IdGrupo,
-                        'dia' => $grupo->DiaSemana,
-                        'hora_inicio' => $grupo->HoraInicial,
-                        'hora_fin' => $grupo->HoraFinal,
-                        'sala' => $grupo->SalaMovil
-                    ]);
                     break;
                 }
             }
     
-            // 3. Si puede prestar, verificar equipos disponibles
             if ($puedePrestar) {
                 $equipoDisponible = $this->verificarEquiposDisponibles($grupoValido->SalaMovil ?? null);
     
                 if (!$equipoDisponible) {
                     $mensajeError = 'No hay equipos disponibles en la sala '.($grupoValido->SalaMovil ?? 'asignada');
-                    
-                    // Información detallada para depuración
-                    Log::info('No hay equipos disponibles', [
-                        'sala_movil' => $grupoValido->SalaMovil ?? null,
-                        'total_disponibles' => DB::table('Equipos')
-                            ->where('Estado', 'Activo')
-                            ->where('Disponibilidad', 'Disponible')
-                            ->count(),
-                        'disponibles_en_sala' => DB::table('Equipos')
-                            ->where('Estado', 'Activo')
-                            ->where('Disponibilidad', 'Disponible')
-                            ->where('SalaMovil', $grupoValido->SalaMovil ?? null)
-                            ->count()
-                    ]);
-                    
                     $puedePrestar = false;
                 }
             } else {
@@ -76,12 +83,6 @@ class PrestamoController extends Controller
                     $mensajeError .= $grupo->DiaSemana.' '.$grupo->HoraInicial.'-'.$grupo->HoraFinal.' (Sala: '.$grupo->SalaMovil.'), ';
                 }
                 $mensajeError = rtrim($mensajeError, ', ');
-                
-                Log::info('Usuario no está en horario de clase', [
-                    'usuario' => $usuario->DocumentoId,
-                    'hora_actual' => Carbon::now('America/Bogota')->format('Y-m-d H:i:s'),
-                    'grupos' => $gruposUsuario->toArray()
-                ]);
             }
         }
     
@@ -104,7 +105,24 @@ class PrestamoController extends Controller
         $usuario = auth()->user();
         $now = Carbon::now('America/Bogota');
 
-        // 1. Validar que esté en horario de clase
+        // 1. Verificar si el usuario tiene préstamos activos
+        $prestamoActivo = DB::table('Prestamos')
+            ->where('DocumentoId', $usuario->DocumentoId)
+            ->where(function($query) {
+                $query->whereNull('FechaDevolucion')
+                      ->orWhereNull('HoraDevolucion');
+            })
+            ->first();
+            
+        if ($prestamoActivo) {
+            Log::warning('Intento de préstamo con préstamo activo existente', [
+                'usuario' => $usuario->DocumentoId,
+                'prestamo_activo' => $prestamoActivo->IdPrestamo
+            ]);
+            return back()->with('error', 'Ya tienes un préstamo activo (Serial: '.$prestamoActivo->Serial.'). Debes devolverlo antes de solicitar otro.');
+        }
+
+        // 2. Validar que esté en horario de clase
         $grupoValido = null;
         $gruposUsuario = DB::table('Usuario_Grupo')
             ->join('Grupos', 'Usuario_Grupo.IdGrupo', '=', 'Grupos.IdGrupo')
@@ -126,7 +144,7 @@ class PrestamoController extends Controller
             return back()->with('error', 'No estás en horario de clase para realizar préstamos');
         }
 
-        // 2. Verificar disponibilidad del equipo
+        // 3. Verificar disponibilidad del equipo
         $equipo = DB::table('Equipos')
             ->where('Serial', $request->serial)
             ->where('Estado', 'Activo')
@@ -143,7 +161,7 @@ class PrestamoController extends Controller
             return back()->with('error', 'El equipo seleccionado ya no está disponible');
         }
 
-        // 3. Registrar el préstamo
+        // 4. Registrar el préstamo
         DB::beginTransaction();
         try {
             $idPrestamo = DB::table('Prestamos')->insertGetId([
