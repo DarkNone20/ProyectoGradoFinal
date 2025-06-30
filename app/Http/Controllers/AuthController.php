@@ -35,18 +35,21 @@ class AuthController extends Controller
         $token = $usuario->createToken('API Token')->plainTextToken;
 
         return response()->json(['user' => $usuario, 'token' => $token], 201);
+        
     }
-
     public function apiLogin(Request $request)
     {
-        $usuario = Usuario::where('DocumentoId', $request->DocumentoId)->first();
+        $usuario = \App\Models\Usuario::where('DocumentoId', $request->DocumentoId)->first();
 
         if (!$usuario || !Hash::check($request->password, $usuario->password)) {
             return response()->json(['message' => 'Credenciales inválidas'], 401);
         }
 
-        $token = $usuario->createToken('API Token')->plainTextToken;
-        return response()->json(['user' => $usuario, 'token' => $token]);
+        // Esto autentica al usuario y crea la sesión
+        Auth::login($usuario);
+        $request->session()->regenerate();
+
+        return response()->json(['message' => 'Login exitoso']);
     }
 
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\PrestamoController;
 use App\Http\Controllers\DevolucionesController;
 use App\Http\Controllers\RenovacionController;
 
+// Rutas protegidas por autenticación
 Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/Prestamo', [PrestamoController::class, 'index']);
@@ -19,6 +20,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/Renovaciones', [RenovacionController::class, 'index']);
 });
 
+// Rutas de login tradicional web
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// *** RUTA DE LOGIN PARA EL FRONTEND VIA FETCH/API ***
+Route::post('/api/login', [AuthController::class, 'apiLogin']); 
