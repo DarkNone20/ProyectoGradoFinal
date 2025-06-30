@@ -335,5 +335,86 @@ class PrestamoController extends Controller
 
     return response()->json($prestamo);
 }
+// ESP8266 consulta si debe abrir el cajón
+public function accionCajon()
+{
+    // Buscamos un préstamo pendiente del día de hoy que aún no se ha abierto el cajón
+    $prestamo = DB::table('Prestamos')
+        ->whereNull('FechaDevolucion')
+        ->whereNull('HoraDevolucion')
+        ->where('AccionCajon', null) // Nuevo campo, ver nota abajo
+        ->whereDate('FechaI', today())
+        ->orderBy('IdPrestamo', 'asc')
+        ->first();
+
+    if ($prestamo) {
+        // Puedes devolver información extra si lo necesitas
+        return response('open', 200);
+    }
+    return response('close', 200);
+}
+
+// ESP8266 avisa que abrió (marca el campo en la base de datos)
+public function accionCajonRealizada(Request $request)
+{
+    // Opcional: puedes pasar el ID de préstamo por el body si tienes más de uno pendiente
+    $prestamo = DB::table('Prestamos')
+        ->whereNull('FechaDevolucion')
+        ->whereNull('HoraDevolucion')
+        ->where('AccionCajon', null)
+        ->orderBy('IdPrestamo', 'asc')
+        ->first();
+
+    if ($prestamo) {
+        DB::table('Prestamos')
+            ->where('IdPrestamo', $prestamo->IdPrestamo)
+            ->update(['AccionCajon' => now()]); // Guarda la fecha/hora de apertura
+        return response()->json(['success' => true]);
+    }
+    return response()->json(['success' => false, 'msg' => 'No encontrado']);
+}
+// ESP8266 consulta si debe abrir el cajón PARA DEVOLUCIÓN
+public function accionCajonDevolucion()
+{
+    $prestamo = DB::table('Prestamos')
+        ->whereNotNull('AccionCajon') // Cajón ya se abrió para préstamo
+        ->whereNull('FechaDevolucion') // Aún no se ha devuelto
+        ->whereNull('HoraDevolucion')
+        ->whereNull('AccionCajonDevolucion') // Cajón NO se ha abierto para devolución
+       ->orderBy('IdPrestamo', 'asc')
+        ->first();
+
+    if ($prestamo) {
+        return response('open', 200);
+    }
+    return response('close', 200);
+}
+
+// ESP8266 avisa que abrió el cajón PARA DEVOLUCIÓN
+public function accionCajonDevolucionRealizada(Request $request)
+{
+    $prestamo = DB::table('Prestamos')
+        ->whereNotNull('AccionCajon')
+        ->whereNull('FechaDevolucion')
+        ->whereNull('HoraDevolucion')
+        ->whereNull('AccionCajonDevolucion')
+        ->orderBy('IdPrestamo', 'asc')
+        ->first();
+
+    if ($prestamo) {
+        DB::table('Prestamos')
+            ->where('IdPrestamo', $prestamo->IdPrestamo)
+            ->update(['AccionCajonDevolucion' => now()]);
+        return response()->json(['success' => true]);
+    }
+    return response()->json(['success' => false, 'msg' => 'No encontrado']);
+}
+
+public function apiIndex()
+{
+    // Ejemplo sencillo, puedes personalizarlo
+    $prestamos = DB::table('Prestamos')->get();
+    return response()->json($prestamos);
+}
 
 }
