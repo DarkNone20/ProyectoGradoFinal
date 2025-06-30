@@ -318,4 +318,22 @@ class PrestamoController extends Controller
             return false;
         }
     }
+
+
+    public function apiShow($id)
+{
+    $usuario = auth()->user();
+
+    $prestamo = DB::table('Prestamos')
+        ->where('IdPrestamo', $id)
+        ->where('DocumentoId', $usuario->DocumentoId) // Solo ve sus préstamos
+        ->first();
+
+    if (!$prestamo) {
+        return response()->json(['message' => 'Préstamo no encontrado'], 404);
+    }
+
+    return response()->json($prestamo);
+}
+
 }
