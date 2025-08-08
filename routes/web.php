@@ -27,3 +27,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // *** RUTA DE LOGIN PARA EL FRONTEND VIA FETCH/API ***
 Route::post('/api/login', [AuthController::class, 'apiLogin']); 
+
+
+
+Route::get('/accion-cajon', [PrestamoController::class, 'accionCajon']);
+Route::post('/accion-cajon-realizada', [PrestamoController::class, 'accionCajonRealizada']);
+Route::get('/accion-cajon-devolucion', [PrestamoController::class, 'accionCajonDevolucion']);
+Route::post('/accion-cajon-devolucion-realizada', [PrestamoController::class, 'accionCajonDevolucionRealizada']);
+

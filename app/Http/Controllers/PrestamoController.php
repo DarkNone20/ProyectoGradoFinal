@@ -100,108 +100,115 @@ class PrestamoController extends Controller
     /**
      * Procesa la solicitud de préstamo con validaciones mejoradas
      */
-    public function realizarPrestamo(Request $request)
-    {
-        $usuario = auth()->user();
-        $now = Carbon::now('America/Bogota');
+  // En app/Http/Controllers/PrestamoController.php
 
-        // 1. Verificar si el usuario tiene préstamos activos
-        $prestamoActivo = DB::table('Prestamos')
-            ->where('DocumentoId', $usuario->DocumentoId)
-            ->where(function($query) {
-                $query->whereNull('FechaDevolucion')
-                      ->orWhereNull('HoraDevolucion');
-            })
-            ->first();
-            
-        if ($prestamoActivo) {
-            Log::warning('Intento de préstamo con préstamo activo existente', [
-                'usuario' => $usuario->DocumentoId,
-                'prestamo_activo' => $prestamoActivo->IdPrestamo
-            ]);
-            return back()->with('error', 'Ya tienes un préstamo activo (Serial: '.$prestamoActivo->Serial.'). Debes devolverlo antes de solicitar otro.');
-        }
+public function realizarPrestamo(Request $request)
+{
+    $usuario = auth()->user();
+    $now = Carbon::now('America/Bogota');
 
-        // 2. Validar que esté en horario de clase
-        $grupoValido = null;
-        $gruposUsuario = DB::table('Usuario_Grupo')
-            ->join('Grupos', 'Usuario_Grupo.IdGrupo', '=', 'Grupos.IdGrupo')
-            ->where('Usuario_Grupo.DocumentoId', $usuario->DocumentoId)
-            ->get();
+    // 1. Verificar si el usuario tiene préstamos activos
+    $prestamoActivo = DB::table('Prestamos')
+        ->where('DocumentoId', $usuario->DocumentoId)
+        ->where('Estado', 'Activo') // Búsqueda más precisa
+        ->first();
+        
+    if ($prestamoActivo) {
+        Log::warning('Intento de préstamo con préstamo activo existente', [
+            'usuario' => $usuario->DocumentoId,
+            'prestamo_activo' => $prestamoActivo->IdPrestamo
+        ]);
+        return back()->with('error', 'Ya tienes un préstamo activo (Serial: '.$prestamoActivo->Serial.'). Debes devolverlo antes de solicitar otro.');
+    }
 
-        foreach ($gruposUsuario as $grupo) {
-            if ($this->validarHorarioGrupo($grupo)) {
-                $grupoValido = $grupo;
-                break;
-            }
-        }
+    // 2. Validar que esté en horario de clase (sin cambios en esta sección)
+    $grupoValido = null;
+    $gruposUsuario = DB::table('Usuario_Grupo')
+        ->join('Grupos', 'Usuario_Grupo.IdGrupo', '=', 'Grupos.IdGrupo')
+        ->where('Usuario_Grupo.DocumentoId', $usuario->DocumentoId)
+        ->get();
 
-        if (!$grupoValido) {
-            Log::warning('Intento de préstamo fuera de horario', [
-                'usuario' => $usuario->DocumentoId,
-                'hora_actual' => $now->format('Y-m-d H:i:s')
-            ]);
-            return back()->with('error', 'No estás en horario de clase para realizar préstamos');
-        }
-
-        // 3. Verificar disponibilidad del equipo
-        $equipo = DB::table('Equipos')
-            ->where('Serial', $request->serial)
-            ->where('Estado', 'Activo')
-            ->where('Disponibilidad', 'Disponible')
-            ->where('SalaMovil', $grupoValido->SalaMovil ?? null)
-            ->first();
-
-        if (!$equipo) {
-            Log::warning('Intento de préstamo de equipo no disponible', [
-                'serial' => $request->serial,
-                'usuario' => $usuario->DocumentoId,
-                'sala' => $grupoValido->SalaMovil ?? null
-            ]);
-            return back()->with('error', 'El equipo seleccionado ya no está disponible');
-        }
-
-        // 4. Registrar el préstamo
-        DB::beginTransaction();
-        try {
-            $idPrestamo = DB::table('Prestamos')->insertGetId([
-                'Serial' => $request->serial,
-                'ActivoFijo' => $request->activo_fijo,
-                'GrupoId' => $grupoValido->IdGrupo,
-                'DocumentoId' => $usuario->DocumentoId,
-                'SalaMovil' => $grupoValido->SalaMovil ?? null,
-                'FechaI' => $now->toDateString(),
-                'FechaF' => $now->addHours($grupoValido->Duracion ?? 1)->toDateString(),
-                'HoraI' => $now->format('H:i:s'),
-                'HoraF' => $now->addHours($grupoValido->Duracion ?? 1)->format('H:i:s'),
-                'Duracion' => $grupoValido->Duracion ?? 1
-            ]);
-
-            // Actualizar estado del equipo
-            DB::table('Equipos')
-                ->where('Serial', $request->serial)
-                ->update(['Disponibilidad' => 'En Prestamo']);
-
-            DB::commit();
-            
-            Log::info('Préstamo realizado con éxito', [
-                'prestamo_id' => $idPrestamo,
-                'usuario' => $usuario->DocumentoId,
-                'equipo' => $request->serial
-            ]);
-            
-            return back()->with('success', 'Préstamo realizado con éxito. Código: PR-'.$idPrestamo);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error al procesar préstamo', [
-                'error' => $e->getMessage(),
-                'usuario' => $usuario->DocumentoId,
-                'equipo' => $request->serial
-            ]);
-            return back()->with('error', 'Error al procesar el préstamo: '.$e->getMessage());
+    foreach ($gruposUsuario as $grupo) {
+        if ($this->validarHorarioGrupo($grupo)) {
+            $grupoValido = $grupo;
+            break;
         }
     }
+
+    if (!$grupoValido) {
+        Log::warning('Intento de préstamo fuera de horario', [
+            'usuario' => $usuario->DocumentoId,
+            'hora_actual' => $now->format('Y-m-d H:i:s')
+        ]);
+        return back()->with('error', 'No estás en horario de clase para realizar préstamos');
+    }
+
+    // 3. Verificar disponibilidad del equipo (sin cambios en esta sección)
+    $equipo = DB::table('Equipos')
+        ->where('Serial', $request->serial)
+        ->where('Estado', 'Activo')
+        ->where('Disponibilidad', 'Disponible')
+        ->where('SalaMovil', $grupoValido->SalaMovil ?? null)
+        ->first();
+
+    if (!$equipo) {
+        Log::warning('Intento de préstamo de equipo no disponible', [
+            'serial' => $request->serial,
+            'usuario' => $usuario->DocumentoId,
+            'sala' => $grupoValido->SalaMovil ?? null
+        ]);
+        return back()->with('error', 'El equipo seleccionado ya no está disponible');
+    }
+
+    // 4. Registrar el préstamo (CÓDIGO CORREGIDO)
+    DB::beginTransaction();
+    try {
+        $idPrestamo = DB::table('Prestamos')->insertGetId([
+            'Serial' => $request->serial,
+            'ActivoFijo' => $request->activo_fijo,
+            'GrupoId' => $grupoValido->IdGrupo,
+            'DocumentoId' => $usuario->DocumentoId,
+            'SalaMovil' => $grupoValido->SalaMovil ?? null,
+            'FechaI' => $now->toDateString(),
+            'FechaF' => $now->copy()->addHours($grupoValido->Duracion ?? 1)->toDateString(),
+            'HoraI' => $now->toTimeString(),
+            'HoraF' => $now->copy()->addHours($grupoValido->Duracion ?? 1)->toTimeString(),
+            'Duracion' => $grupoValido->Duracion ?? 1,
+            
+            // --- CAMPOS CORREGIDOS Y AÑADIDOS ---
+            'Estado' => 'Activo',
+            'AccionCajon' => null,
+            'AccionCajonDevolucion' => null,
+            'FechaDevolucion' => null,
+            'HoraDevolucion' => null,
+            'Observaciones' => null
+        ]);
+
+        // Actualizar estado del equipo
+        DB::table('Equipos')
+            ->where('Serial', $request->serial)
+            ->update(['Disponibilidad' => 'En Prestamo']);
+
+        DB::commit();
+        
+        Log::info('Préstamo realizado con éxito', [
+            'prestamo_id' => $idPrestamo,
+            'usuario' => $usuario->DocumentoId,
+            'equipo' => $request->serial
+        ]);
+        
+        return back()->with('success', 'Préstamo realizado con éxito. Código: PR-'.$idPrestamo);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error al procesar préstamo', [
+            'error' => $e->getMessage(),
+            'usuario' => $usuario->DocumentoId,
+            'equipo' => $request->serial
+        ]);
+        return back()->with('error', 'Error al procesar el préstamo: '.$e->getMessage());
+    }
+}
 
     /**
      * Valida si el horario actual coincide con el grupo (mejorado)
@@ -338,76 +345,91 @@ class PrestamoController extends Controller
 // ESP8266 consulta si debe abrir el cajón
 public function accionCajon()
 {
-    // Buscamos un préstamo pendiente del día de hoy que aún no se ha abierto el cajón
-    $prestamo = DB::table('Prestamos')
-        ->whereNull('FechaDevolucion')
-        ->whereNull('HoraDevolucion')
-        ->where('AccionCajon', null) // Nuevo campo, ver nota abajo
-        ->whereDate('FechaI', today())
-        ->orderBy('IdPrestamo', 'asc')
+    // Busca el préstamo más reciente
+    $prestamoReciente = DB::table('Prestamos')
+        ->orderBy('IdPrestamo', 'desc')
         ->first();
 
-    if ($prestamo) {
-        // Puedes devolver información extra si lo necesitas
-        return response('open', 200);
+    if ($prestamoReciente) {
+        // Combina la fecha y hora de inicio en un solo objeto Carbon para compararlo
+        $fechaCreacion = Carbon::parse($prestamoReciente->FechaI . ' ' . $prestamoReciente->HoraI, 'America/Bogota');
+        $ahora = Carbon::now('America/Bogota');
+
+        // Comprueba si la creación fue en los últimos 3 minutos y si el préstamo aún está activo
+        if ($ahora->diffInMinutes($fechaCreacion) < 3 && $prestamoReciente->Estado === 'Activo') {
+            return response('open', 200);
+        }
     }
+
+    // Si no hay préstamos recientes o ya pasaron 3 minutos, cierra
     return response('close', 200);
 }
 
-// ESP8266 avisa que abrió (marca el campo en la base de datos)
-public function accionCajonRealizada(Request $request)
+public function accionCajonRealizada()
 {
-    // Opcional: puedes pasar el ID de préstamo por el body si tienes más de uno pendiente
+    // Busca el último préstamo que debería estar abriéndose
     $prestamo = DB::table('Prestamos')
+        ->whereNull('AccionCajon')
         ->whereNull('FechaDevolucion')
-        ->whereNull('HoraDevolucion')
-        ->where('AccionCajon', null)
-        ->orderBy('IdPrestamo', 'asc')
+        ->orderBy('IdPrestamo', 'desc')
         ->first();
 
     if ($prestamo) {
         DB::table('Prestamos')
             ->where('IdPrestamo', $prestamo->IdPrestamo)
-            ->update(['AccionCajon' => now()]); // Guarda la fecha/hora de apertura
-        return response()->json(['success' => true]);
+            ->update(['AccionCajon' => now()]); // Registra la fecha y hora actual
+        Log::info("Cajón de préstamo abierto para el préstamo ID: {$prestamo->IdPrestamo}");
+        return response()->json(['status' => 'ok']);
     }
-    return response()->json(['success' => false, 'msg' => 'No encontrado']);
+
+    return response()->json(['status' => 'no_pending_action'], 404);
 }
-// ESP8266 consulta si debe abrir el cajón PARA DEVOLUCIÓN
+
 public function accionCajonDevolucion()
 {
-    $prestamo = DB::table('Prestamos')
-        ->whereNotNull('AccionCajon') // Cajón ya se abrió para préstamo
-        ->whereNull('FechaDevolucion') // Aún no se ha devuelto
-        ->whereNull('HoraDevolucion')
-        ->whereNull('AccionCajonDevolucion') // Cajón NO se ha abierto para devolución
-       ->orderBy('IdPrestamo', 'asc')
+    // Busca la devolución más reciente
+    $devolucionReciente = DB::table('Prestamos')
+        ->where('Estado', 'Devuelto')
+        ->whereNotNull('FechaDevolucion')
+        ->whereNotNull('HoraDevolucion')
+        ->orderBy('FechaDevolucion', 'desc')
+        ->orderBy('HoraDevolucion', 'desc')
         ->first();
 
-    if ($prestamo) {
-        return response('open', 200);
+    if ($devolucionReciente) {
+        // Combina la fecha y hora de devolución en un solo objeto Carbon
+        $fechaDevolucion = Carbon::parse($devolucionReciente->FechaDevolucion . ' ' . $devolucionReciente->HoraDevolucion, 'America/Bogota');
+        $ahora = Carbon::now('America/Bogota');
+
+        // Comprueba si la devolución se procesó en los últimos 3 minutos
+        if ($ahora->diffInMinutes($fechaDevolucion) < 3) {
+            return response('open', 200);
+        }
     }
+
+    // Si no hay devoluciones recientes o ya pasaron 3 minutos, cierra
     return response('close', 200);
 }
 
-// ESP8266 avisa que abrió el cajón PARA DEVOLUCIÓN
-public function accionCajonDevolucionRealizada(Request $request)
+
+public function accionCajonDevolucionRealizada()
 {
+    // Busca el último préstamo devuelto que necesita registrar la acción del cajón
     $prestamo = DB::table('Prestamos')
-        ->whereNotNull('AccionCajon')
-        ->whereNull('FechaDevolucion')
-        ->whereNull('HoraDevolucion')
+        ->whereNotNull('FechaDevolucion')
         ->whereNull('AccionCajonDevolucion')
-        ->orderBy('IdPrestamo', 'asc')
+        ->orderBy('IdPrestamo', 'desc')
         ->first();
 
     if ($prestamo) {
         DB::table('Prestamos')
             ->where('IdPrestamo', $prestamo->IdPrestamo)
-            ->update(['AccionCajonDevolucion' => now()]);
-        return response()->json(['success' => true]);
+            ->update(['AccionCajonDevolucion' => now()]); // Registra la fecha y hora actual
+        Log::info("Cajón de devolución abierto para el préstamo ID: {$prestamo->IdPrestamo}");
+        return response()->json(['status' => 'ok']);
     }
-    return response()->json(['success' => false, 'msg' => 'No encontrado']);
+
+    return response()->json(['status' => 'no_pending_action'], 404);
 }
 
 public function apiIndex()
