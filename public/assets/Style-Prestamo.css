@@ -379,12 +379,22 @@ footer {
         padding: 20px;
     }
     
+    /* ===== INICIO: CORRECCIÓN PARA CENTRADO EN MÓVIL ===== */
     .alert,
     .debug-info {
         padding: 20px;
         width: 95%;
+        margin-left: auto;   /* Asegura el centrado */
+        margin-right: auto;  /* Asegura el centrado */
+        box-sizing: border-box; /* Previene que el padding desborde el contenedor */
     }
     
+    .alert-container {
+        /* Se anula el width: 100% para que no ocupe toda la línea y permita el centrado de su hijo .alert */
+        width: auto;
+    }
+    /* ===== FIN: CORRECCIÓN PARA CENTRADO EN MÓVIL ===== */
+
     .Boton {
         position: relative;
         bottom: auto;
@@ -392,6 +402,60 @@ footer {
         justify-content: center;
         margin: 20px auto;
     }
+    
+    /* ===== INICIO: SOLUCIÓN PARA TABLA RESPONSIVA ===== */
+    .debug-info table {
+        border: 0;
+    }
+
+    .debug-info table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    .debug-info table tr {
+        border-bottom: 3px solid #07075a;
+        display: block;
+        margin-bottom: 1.2em; /* Aumenta el espacio entre "tarjetas" */
+    }
+
+    .debug-info table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .9em;
+        text-align: right;
+        padding-left: 40%;
+        position: relative;
+    }
+
+    .debug-info table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 35%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #07075a;
+    }
+    
+    .debug-info table td:nth-of-type(1):before { content: "Curso"; }
+    .debug-info table td:nth-of-type(2):before { content: "Día"; }
+    .debug-info table td:nth-of-type(3):before { content: "Horario"; }
+    .debug-info table td:nth-of-type(4):before { content: "Sala"; }
+    .debug-info table td:nth-of-type(5):before { content: "Fecha Inicio"; }
+
+    .debug-info table td:last-child {
+        border-bottom: 0;
+    }
+    /* ===== FIN: SOLUCIÓN PARA TABLA RESPONSIVA ===== */
 }
 
 @media (max-width: 480px) {

@@ -14,7 +14,7 @@
 
     <div class="Encabezado">
         <div class="Logo">
-            <a href="https://www.icesi.edu.co/"> <img src="{{ asset('Imagenes/Logo2.png') }}" alt="Logo"></a>
+            <a href="https://www.icesi.edu.co/"> <!--  <img src="{{ asset('Imagenes/Logo2.png') }}" alt="Logo">--></a>
         </div>
 
         <div class="Titulo">

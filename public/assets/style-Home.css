@@ -216,18 +216,23 @@ footer {
         padding-right: 0;
     }
 
+    /* --- INICIO DE LA CORRECCIÓN --- */
     .Principal {
         grid-template-columns: 1fr;
         margin-top: 30px;
+        padding: 0 20px; /* AÑADIDO: Crea un espacio de 20px a cada lado */
+        box-sizing: border-box; /* AÑADIDO: Asegura que el padding no desborde el contenedor */
     }
 
     .Principal-Uno,
     .Principal-Dos {
-        width: 90%;
+        width: 100%; /* CAMBIADO: Ocupará el 100% del contenedor CON PADDING */
         height: auto;
         padding: 20px;
         margin-bottom: 20px;
+        box-sizing: border-box; /* AÑADIDO: Buena práctica para que el padding no afecte el ancho */
     }
+    /* --- FIN DE LA CORRECCIÓN --- */
 
     .Principal-Uno img,
     .Principal-Dos img {
